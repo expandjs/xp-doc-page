@@ -136,20 +136,26 @@ This element is used to display a documentation page.
                 opacity: 0.50;
             }
 
-            :host section .optional {
+            :host section .featureTag {
+                background: hsla(0, 0%, 0%, 0.50);
+                border-radius: 2px;
+                color: hsla(0, 0%, 100%, 1);
+                margin-right: 6px;
+                padding: 4px 8px;
+            }
+
+            :host section .featureDefault,
+            :host section .paramName.optional,
+            :host section .subtitle {
                 font-style: italic;
             }
 
-            :host section .optional .paramName:after {
+            :host section .paramName.optional:after {
                 content: ']';
             }
 
-            :host section .optional .paramName:before {
+            :host section .paramName.optional:before {
                 content: '[';
-            }
-
-            :host section .subtitle {
-                font-style: italic;
             }
 
             /* TOP */
@@ -196,18 +202,6 @@ This element is used to display a documentation page.
 
             :host section.features .feature + .feature {
                 border-top: 1px solid hsla(0, 0%, 0%, 0.12);
-            }
-
-            :host section.features .featureTag {
-                background: hsla(0, 0%, 0%, 0.50);
-                border-radius: 2px;
-                color: hsla(0, 0%, 100%, 1);
-                margin-right: 6px;
-                padding: 4px 8px;
-            }
-
-            :host section.features .featureDefault {
-                font-style: italic;
             }
 
             /* COLORS */
@@ -298,18 +292,18 @@ This element is used to display a documentation page.
                 <h2 class="title" font-type="headline">Arguments</h2>
                 <ol class="list params">
                     <template repeat="{{param in data.params}}">
-                        <li class="featureParam {{param.optional || param.default ? 'optional' : ''}}">
+                        <li class="featureParam">
                             <div class="paramInfo">
-                                <span class="paramName">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
+                                <span class="paramName {{param.optional || param.default ? 'optional' : ''}}">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
                                 <span class="paramType">{{param.type}}</span>
                             </div>
                             <div class="paramSummary">{{param.summary}}</div>
                             <template if="{{param.params.length}}">
                                 <ul class="list paramParams">
                                     <template repeat="{{subParam in param.params}}">
-                                        <div class="paramParam {{subParam.optional || subParam.default ? 'optional' : ''}}">
+                                        <div class="paramParam">
                                             <div class="paramInfo">
-                                                <span class="paramName">{{param.name + '.' + subParam.name + (subParam.default ? ' = ' + subParam.default : '')}}</span>
+                                                <span class="paramName {{subParam.optional || subParam.default ? 'optional' : ''}}">{{param.name + '.' + subParam.name + (subParam.default ? ' = ' + subParam.default : '')}}</span>
                                                 <span class="paramType">{{subParam.type}}</span>
                                             </div>
                                             <div class="paramSummary">{{subParam.summary}}</div>
@@ -357,18 +351,18 @@ This element is used to display a documentation page.
                                     <div class="subtitle">Arguments</div>
                                     <ol class="list featureParams">
                                         <template repeat="{{param in feature.params}}">
-                                            <li class="featureParam {{param.optional ? 'optional' : ''}}">
+                                            <li class="featureParam">
                                                 <div class="paramInfo">
-                                                    <span class="paramName">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
+                                                    <span class="paramName {{param.optional ? 'optional' : ''}}">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
                                                     <span class="paramType">{{param.type}}</span>
                                                 </div>
                                                 <div class="paramSummary">{{param.summary}}</div>
                                                 <template if="{{param.params.length}}">
                                                     <ul class="list paramParams">
                                                         <template repeat="{{subParam in param.params}}">
-                                                            <li class="paramParam {{subParam.optional ? 'optional' : ''}}">
+                                                            <li class="paramParam">
                                                                 <div class="paramInfo">
-                                                                    <span class="paramName">{{param.name + '.' + subParam.name + (subParam.default ? ' = ' + subParam.default : '')}}</span>
+                                                                    <span class="paramName {{subParam.optional ? 'optional' : ''}}">{{param.name + '.' + subParam.name + (subParam.default ? ' = ' + subParam.default : '')}}</span>
                                                                     <span class="paramType">{{subParam.type}}</span>
                                                                 </div>
                                                                 <div class="paramSummary">{{subParam.summary}}</div>
