@@ -15,12 +15,14 @@ This element is used to display a documentation page.
 
 @dependency polymer Polymer/polymer#^0.5
 @dependency expandjs ExpandJS/expandjs
+@dependency mat-paper ExpandJS/mat-paper
 @dependency xp-markdown ExpandJS/xp-markdown
 @dependency xp-window ExpandJS/xp-window
 -->
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../mat-paper/mat-paper.html">
 <link rel="import" href="../xp-markdown/xp-markdown.html">
 <link rel="import" href="../xp-window/xp-window.html">
 
@@ -31,359 +33,366 @@ This element is used to display a documentation page.
             :host {
                 display: block;
                 overflow: visible;
-            }
 
-            :host /deep/ p {
-                margin: 0;
-            }
-
-            /* TOP */
-            :host .top .name,
-            :host .top .version {
-                margin: 0;
-                display: inline-block;
-            }
-
-            :host .top .version {
-                margin-left: 8px;
-                opacity: 0.54;
-            }
-
-            :host .top .type {
-                text-transform: capitalize;
-                padding: 0;
-                margin: 0;
-                opacity: 0.26;
-            }
-
-            /* INHERITANCE */
-            :host .inheritance {
-                padding: 16px 0;
-            }
-
-            :host .inheritance h2 {
-                margin: 0;
-            }
-
-            :host .inheritance .extends,
-            :host .inheritance .mixins {
-                padding: 4px 0;
-                font-size: 20px;
-                font-weight: 400;
-                letter-spacing: 0.005em;
-                line-height: normal;
-                white-space: nowrap;
-            }
-
-            /* DESCRIPTION */
-            :host .section.summary {
-                padding-bottom: 32px;
-                border-bottom: 1px solid hsla(0, 0%, 0%, 0.12);
-                margin-bottom: 16px;
-            }
-
-            :host .summary .title {
-                padding: 36px 0 0 0;
-                margin: 0;
-                text-transform: capitalize;
-            }
-
-            /* FEATURES */
-            :host .features .title {
-                margin: 0;
-                padding: 20px 0 32px 0;
-                text-transform: capitalize;
-            }
-
-            :host .features .feature {
-                padding-bottom: 16px;
-                padding-left: 24px;
-            }
-
-            :host .features .primary {
-                padding-right: 32px;
-                min-width: 64px;
-            }
-
-            :host .features .secondary {
+                /* SUBHEAD */
                 font-size: 16px;
                 font-weight: 400;
                 letter-spacing: 0.01em;
                 line-height: 24px;
+                text-overflow: clip;
                 white-space: normal;
-                margin-bottom: 8px;
             }
 
-            :host .features .featureInfo,
-            :host .features .subtitle {
-                font-weight: 500 !important;
+            /* RESET */
+
+            :host a {
+                text-decoration: none;
+            }
+
+            :host a[href]:hover {
+                text-decoration: underline;
+            }
+
+            :host h1, :host h2,
+            :host ol, :host ul,
+            :host /deep/ p {
                 margin: 0;
             }
 
-            :host .features .featureType {
-                color: hsla(0, 0%, 0%, .54);
-                padding: 0 8px;
-                margin: 0;
+            :host section ~ section {
+                margin-top: 24px;
             }
 
-            :host .feature .featureSummary {
-                padding-bottom: 8px;
-            }
+            /* FONT */
 
-            :host .features:not(:last-child) .feature:last-child {
-                border-bottom: 1px solid hsla(0, 0%, 0%, 0.12);
-            }
-
-            :host .features .feature:not(:last-child) .secondary {
-                border-bottom: 1px solid hsla(0, 0%, 0%, 0.12);
-            }
-
-            :host .features .featureTag {
-                background: hsla(0, 0%, 0%, 0.54);
-                border-radius: 2px;
-                padding: 4px 8px;
+            :host [font-type="caption"] {
                 font-size: 12px;
-                color: hsla(0, 0%, 100%, 1);
-                margin-right: 8px;
+                font-weight: 400;
+                letter-spacing: 0.02em;
+                line-height: 14px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
-            /* CONSTRUCTOR */
-            :host .section.constructs .title {
-                padding: 20px 0 0 0;
+            :host [font-type="button"] {
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: 0.01em;
+                line-height: 20px;
+                text-overflow: ellipsis;
+                text-transform: uppercase;
+                white-space: nowrap;
             }
 
-            :host .section.constructs .featureInfo,
-            :host .section.constructs .featureInfo .paramName {
-                font-weight: 400 !important;
+            :host [font-type="title"] {
+                font-size: 20px;
+                font-weight: 500;
+                letter-spacing: 0.005em;
+                line-height: 24px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
-            :host .section.constructs .featureInfo {
-                padding-bottom: 24px;
-                opacity: 0.6;
+            :host [font-type="headline"] {
+                font-size: 24px;
+                font-weight: 400;
+                letter-spacing: 0;
+                line-height: 32px;
+                text-overflow: clip;
+                white-space: normal;
             }
 
-            :host .section .primary .featureParams::after {
-                content: " )";
+            :host [font-type="display"] {
+                font-size: 34px;
+                font-weight: 400;
+                letter-spacing: 0;
+                line-height: 40px;
+                text-overflow: clip;
+                white-space: normal;
             }
 
-            :host .section .primary .featureParams::before {
-                content: "( ";
+            :host [font-type="display3"] {
+                font-size: 56px;
+                font-weight: 400;
+                letter-spacing: -0.005em;
+                line-height: 68px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
-            :host .paramInfo.optional .paramName::after {
-                content: " ]";
+            /* GENERAL */
+
+            :host section .featureName,
+            :host section .paramName {
+                font-weight: 600;
+                margin-right: 6px;
+                opacity: 0.80;
             }
 
-            :host .paramInfo.optional .paramName::before {
-                content: "[ ";
+            :host section .featureType,
+            :host section .paramType,
+            :host section .returnsType {
+                margin-right: 6px;
+                opacity: 0.50;
             }
 
-            /* PARAMS */
-
-            :host .secondary .paramName {
-                font-weight: 600 !important;
-                margin: 0;
-            }
-
-            :host .paramType {
-                color: hsla(0, 0%, 0%, .54);
-                padding: 0 8px;
-                margin: 0;
-            }
-
-            :host .paramSummary {
-                padding-bottom: 16px;
-            }
-
-            :host .paramInfo.optional,
-            :host .paramParam .paramInfo.optional {
+            :host section .optional {
                 font-style: italic;
             }
 
-            :host .paramInfo.optional .paramName,
-            :host .paramParam .paramInfo.optional .paramName {
-                opacity: 0.8;
+            :host section .optional .paramName:after {
+                content: ']';
             }
 
-            :host .featureDefault .default {
-                font-weight: 500;
+            :host section .optional .paramName:before {
+                content: '[';
             }
 
+            :host section .subtitle {
+                font-style: italic;
+            }
+
+            /* TOP */
+
+            :host section.top .name {
+                display: inline-block;
+                margin: 0 8px 4px 0;
+            }
+
+            :host section.top .version {
+                display: inline-block;
+                opacity: 0.50;
+            }
+
+            :host section.top .type {
+                opacity: 0.30;
+                text-transform: capitalize;
+            }
+            
+            /* LINKS */
+
+            :host section.links {
+                opacity: 0.50;
+            }
+
+            :host section.links a {
+                margin-right: 8px;
+            }
+
+            /* FEATURES */
+
+            :host section.features {
+                border: 1px solid hsla(0, 0%, 0%, 0.12);
+            }
+
+            :host section.features .title {
+                padding: 24px;
+                text-transform: capitalize;
+            }
+
+            :host section.features .feature {
+                padding: 16px 24px;
+            }
+
+            :host section.features .feature + .feature {
+                border-top: 1px solid hsla(0, 0%, 0%, 0.12);
+            }
+
+            :host section.features .featureTag {
+                background: hsla(0, 0%, 0%, 0.50);
+                border-radius: 2px;
+                color: hsla(0, 0%, 100%, 1);
+                margin-right: 6px;
+                padding: 4px 8px;
+            }
+
+            :host section.features .featureDefault {
+                font-style: italic;
+            }
+
+            /* COLORS */
+
+            :host section.features.constructs {
+                background: #E0F2F1;
+            }
+
+            :host section.features.constructs .title {
+                background: #00BEA4;
+                color: hsla(0, 0%, 100%, 1);
+            }
+
+            :host section.features.attributes {
+                background: #FFCBBB;
+            }
+
+            :host section.features.attributes .title {
+                background: #FF5621;
+                color: hsla(0, 0%, 100%, 1);
+            }
+
+            :host section.features.properties {
+                background: #FFF8E1;
+            }
+
+            :host section.features.properties .title {
+                background: #F3B300;
+                color: hsla(0, 0%, 100%, 1);
+            }
+
+            :host section.features.methods {
+                background: #E0F2F1;
+            }
+
+            :host section.features.methods .title {
+                background: #00BEA4;
+                color: hsla(0, 0%, 100%, 1);
+            }
+
+            :host section.features.events {
+                background: #E3F2FD;
+            }
+
+            :host section.features.events .title {
+                background: #4184F3;
+                color: hsla(0, 0%, 100%, 1);
+            }
         </style>
 
         <!-- HIDDEN -->
         <xp-window href="{{href}}"></xp-window>
 
         <!-- TOP -->
-        <div class="section top">
+        <section class="top">
             <h1 class="name" font-type="display3">{{data.name}}</h1>
-            <template if="{{data.version}}"><h4 class="version" font-type="subhead">v{{data.version}}</h4></template>
+            <template if="{{data.version}}"><span class="version">v{{data.version}}</span></template>
             <h2 class="type" font-type="title">{{data.type}}</h2>
-        </div>
+        </section>
 
         <!-- INHERITANCE -->
         <template if="{{data.extends || data.mixins.length}}">
-            <div class="section inheritance">
-                <template if="{{data.extends}}"><h2 class="extends" font-type="title">Extends: <a href="{{data.extends.url}}">{{data.extends.name}}</a></h2></template>
+            <section class="inheritance">
+                <template if="{{data.extends}}"><h2 class="extends" font-type="title">Extends: <template if="{{data.extends.url}}"><a href="{{data.extends.url}}">{{data.extends.name}}</a></template><template if="{{!data.extends.url}}">{{data.extends.name}}</template></h2></template>
                 <template if="{{data.mixins.length}}"><h2 class="mixins" font-type="title">Mixins: <template repeat="{{mixin, i in data.mixins}}"><a href="{{mixin.url}}">{{mixin.name}}</a><template if="{{i < data.mixins.length - 1}}">, </template></template></h2></template>
-            </div>
+            </section>
         </template>
 
         <!-- LINKS -->
         <template if="{{data.homepage || data.demo}}">
-            <div class="section links">
-                <template if="{{data.homepage}}"><a class="button homepage" hidden?="{{data.homepage === href}}" href="{{data.homepage}}">Homepage</a></template>
-                <template if="{{data.demo}}"><a class="button demo" hidden?="{{data.demo === href}}" href="{{data.demo}}">Demo</a></template>
-            </div>
+            <section class="links">
+                <template if="{{data.homepage}}"><a class="button homepage" font-type="button" hidden?="{{data.homepage === href}}" href="{{data.homepage}}">Homepage</a></template>
+                <template if="{{data.demo}}"><a class="button demo" font-type="button" hidden?="{{data.demo === href}}" href="{{data.demo}}">Demo</a></template>
+            </section>
         </template>
 
         <!-- SUMMARY -->
         <template if="{{data.summary}}">
-            <div class="section summary">
+            <section class="summary">
                 <h2 class="title" font-type="headline">Summary</h2>
                 <xp-markdown class="summary" text="{{data.summary}}"></xp-markdown>
-            </div>
+            </section>
         </template>
 
         <!-- PARAMS -->
         <template if="{{data.params.length}}">
-            <h3 class="subtitle" font-type="title">Arguments</h3>
-            <ol class="params">
-                <template repeat="{{param in data.params}}">
-                    <li class="featureParam">
-                        <div class="paramInfo {{param.optional ? 'optional' : ''}}" font-type="subhead">
-                            <span class="paramName">{{param.name}}</span>
-                            <span class="paramType">{{param.type}}</span>
-                        </div>
-                        <div class="paramSummary">{{param.summary}}</div>
-                        <template if="{{param.params.length}}">
-                            <ul class="paramParams">
-                                <template repeat="{{param in param.params}}">
-                                    <div class="paramParam">
-                                        <div class="paramInfo {{param.optional ? 'optional' : ''}}">
-                                            <span class="paramName">{{param.name}}</span>
-                                            <span class="paramType">{{' (' + param.type + ')'}}</span>
+            <section class="params">
+                <h2 class="title" font-type="headline">Arguments</h2>
+                <ol class="list params">
+                    <template repeat="{{param in data.params}}">
+                        <li class="featureParam {{param.optional || param.default ? 'optional' : ''}}">
+                            <div class="paramInfo">
+                                <span class="paramName">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
+                                <span class="paramType">{{param.type}}</span>
+                            </div>
+                            <div class="paramSummary">{{param.summary}}</div>
+                            <template if="{{param.params.length}}">
+                                <ul class="list paramParams">
+                                    <template repeat="{{subParam in param.params}}">
+                                        <div class="paramParam {{subParam.optional || subParam.default ? 'optional' : ''}}">
+                                            <div class="paramInfo">
+                                                <span class="paramName">{{param.name + '.' + subParam.name + (subParam.default ? ' = ' + subParam.default : '')}}</span>
+                                                <span class="paramType">{{subParam.type}}</span>
+                                            </div>
+                                            <div class="paramSummary">{{subParam.summary}}</div>
                                         </div>
-                                        <template if="{{subParam.default}}">
-                                            <span class="paramDefault">
-                                                <span class="default">Default:</span>
-                                                {{subParam.default}}
-                                            </span>
-                                        </template>
-                                        <div class="paramSummary">{{param.summary}}</div>
-                                    </div>
-                                </template>
-                            </ul>
-                        </template>
-                    </li>
-                </template>
-            </ol>
+                                    </template>
+                                </ul>
+                            </template>
+                        </li>
+                    </template>
+                </ol>
+            </section>
         </template>
 
         <!-- RETURNS -->
         <template if="{{data.returns}}">
-            <h3 class="subtitle" font-type="subhead">Returns</h3>
-            <template bind="{{data.returns as returns}}">
-                <div class="returnInfo">
-                    <span class="returnType">{{'(' + returns.type + ')'}}</span>
-                    <span class="returnSummary">{{returns.summary ? ': ' + returns.summary : ''}}</span>
-                </div>
-            </template>
+            <section class="returns">
+                <h2 class="title" font-type="headline">Returns</h2>
+                <template bind="{{data.returns as returns}}">
+                    <div class="returnsInfo">
+                        <span class="returnsType">{{returns.type}}</span>
+                    </div>
+                    <div class="returnsSummary">{{returns.summary}}</div>
+                </template>
+            </section>
         </template>
 
         <!-- FEATURES -->
         <template repeat="{{featureType in featureTypes}}">
             <template if="{{data[featureType] && (featureType === 'constructs' || data[featureType].length)}}">
-                <div class="section features {{featureType}}">
-                    <h2 class="title" font-type="display">{{featureType === 'constructs' ? 'Constructor' : featureType}}</h2>
+                <section class="features {{featureType}}">
+                    <h2 class="title" font-type="headline">{{featureType === 'constructs' ? 'Constructor' : featureType}}</h2>
                     <template repeat="{{feature in featureType === 'constructs' ? [data[featureType]] : data[featureType]}}">
                         <div class="feature" vertical layout>
-                            <div class="primary" horizontal layout>
-                                <h3 class="featureInfo" font-type="subhead">
-                                    <span class="featureNew">{{featureType === 'constructs' ? 'new ' : ''}}</span>
-                                    <span class="featureName">{{featureType === 'constructs' ? data.name : feature.name}}</span>
-                                    <template if="{{feature.params}}">
-                                        <span class="featureParams">
-                                            <template repeat="{{param, i in feature.params}}">
-                                                <span class="paramBracket">{{param.default || param.optional ? '[' : ''}}</span>
-                                                <span class="paramName {{param.default || param.optional ? 'optional' : ''}}">
-                                                    {{param.name}}
-                                                </span>
-                                                <span class="paramEqual">{{param.default ? ' = ' : ''}}</span>
-                                                <span class="paramDefault">{{param.default}}</span>
-                                                <span class="paramBracket">{{param.default || param.optional ? ']' : ''}}</span>
-                                                <span class="paramSeparator" hidden?="{{i === feature.params.length - 1}}">, </span>
-                                            </template>
-                                        </span>
-                                    </template>
-                                </h3>
-                                <div class="featureTags" horizontal layout>
-                                    <template if="{{feature.type}}"><h3 class="featureType" font-type="subhead">{{feature.type}}</h3></template>
-                                    <template if="{{feature.abstract}}"><div class="featureTag" font-type="caption">abstract</div></template>
-                                    <template if="{{feature.readonly}}"><div class="featureTag" font-type="caption">readonly</div></template>
-                                    <template if="{{feature.static}}"><div class="featureTag" font-type="caption">static</div></template>
-                                </div>
+                            <div class="featurePrimary">
+                                <span class="featureName">{{featureType === 'constructs' ? 'new ' + data.name : feature.name}}</span>
+                                <template if="{{feature.type}}"><span class="featureType">{{feature.type}}</span></template>
+                                <template if="{{feature.abstract}}"><span class="featureTag" font-type="caption" self-start>abstract</span></template>
+                                <template if="{{feature.readonly}}"><span class="featureTag" font-type="caption" self-start>readonly</span></template>
+                                <template if="{{feature.static}}"><span class="featureTag" font-type="caption" self-start>static</span></template>
                             </div>
-                            <div class="secondary">
-                                <template if="{{feature.default}}">
-                                    <div class="featureDefault">
-                                        <span class="default">Default:</span>
-                                        {{feature.default}}
-                                    </div>
-                                </template>
+                            <div class="featureSecondary">
+                                <template if="{{feature.default}}"><div class="featureDefault">Default: {{feature.default}}</div></template>
                                 <template if="{{feature.summary}}"><xp-markdown class="featureSummary" text="{{feature.summary}}"></xp-markdown></template>
                                 <template if="{{feature.params.length}}">
-                                    <h3 class="subtitle" font-type="title">Arguments</h3>
-                                    <ol class="featureParams">
+                                    <div class="subtitle">Arguments</div>
+                                    <ol class="list featureParams">
                                         <template repeat="{{param in feature.params}}">
-                                            <div class="featureParam">
-                                                <div class="paramInfo {{param.optional ? 'optional' : ''}}">
-                                                    <!--<span class="paramBracket">{{param.default || param.optional ? '[' : ''}}</span>-->
-                                                    <span class="paramName">{{param.name}}</span>
-                                                    <!--<span class="paramEqual">{{param.default ? ' = ' : ''}}</span>-->
-                                                    <!--<span class="paramDefault">{{param.default}}</span>-->
-                                                    <!--<span class="paramBracket">{{param.default || param.optional ? ']' : ''}}</span>-->
-                                                    <!--<span class="paramType">{{' (' + param.type + ')'}}</span>-->
+                                            <li class="featureParam {{param.optional ? 'optional' : ''}}">
+                                                <div class="paramInfo">
+                                                    <span class="paramName">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
                                                     <span class="paramType">{{param.type}}</span>
                                                 </div>
-                                                <template if="{{param.default}}"><span class="paramDefault">{{param.default}}</span></template>
                                                 <div class="paramSummary">{{param.summary}}</div>
                                                 <template if="{{param.params.length}}">
-                                                    <ul class="paramParams">
+                                                    <ul class="list paramParams">
                                                         <template repeat="{{subParam in param.params}}">
-                                                            <div class="paramParam">
-                                                                <div class="paramInfo {{subParam.optional ? 'optional' : ''}}">
-                                                                    <!--<span class="paramBracket">{{subParam.default || subParam.optional ? '[' : ''}}</span>-->
-                                                                    <span class="paramName">{{param.name + '.' + subParam.name}}</span>
-                                                                    <!--<span class="paramEqual">{{subParam.default ? ' = ' : ''}}</span>-->
-                                                                    <!--<span class="paramDefault">{{subParam.default}}</span>-->
-                                                                    <!--<span class="paramBracket">{{subParam.default || subParam.optional ? ']' : ''}}</span>-->
-                                                                    <!--<span class="paramType">{{' (' + subParam.type + ')'}}</span>-->
+                                                            <li class="paramParam {{subParam.optional ? 'optional' : ''}}">
+                                                                <div class="paramInfo">
+                                                                    <span class="paramName">{{param.name + '.' + subParam.name + (subParam.default ? ' = ' + subParam.default : '')}}</span>
                                                                     <span class="paramType">{{subParam.type}}</span>
                                                                 </div>
-                                                                <template if="{{subParam.default}}"><span class="paramDefault">Default: {{subParam.default}}</span></template>
                                                                 <div class="paramSummary">{{subParam.summary}}</div>
-                                                            </div>
+                                                            </li>
                                                         </template>
                                                     </ul>
                                                 </template>
-                                            </div>
+                                            </li>
                                         </template>
                                     </ol>
                                 </template>
                                 <template if="{{feature.returns}}">
-                                    <h3 class="subtitle" font-type="subhead">Returns</h3>
+                                    <div class="subtitle">Returns</div>
                                     <template bind="{{feature.returns as returns}}">
-                                        <div class="returnInfo">
-                                            <span class="returnType">{{'(' + returns.type + ')'}}</span>
-                                            <span class="returnSummary">{{returns.summary ? ': ' + returns.summary : ''}}</span>
+                                        <div class="returnsInfo">
+                                            <span class="returnsType">{{returns.type}}</span>
                                         </div>
+                                        <div class="returnsSummary">{{returns.summary}}</div>
                                     </template>
                                 </template>
                             </div>
                         </div>
                     </template>
-                </div>
+                </section>
             </template>
         </template>
 
