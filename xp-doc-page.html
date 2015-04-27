@@ -205,8 +205,6 @@ This element is used to display a documentation page.
                 border-top: 1px solid hsla(0, 0%, 0%, 0.12);
             }
 
-            /* COLORS */
-
             :host section.features.constructs {
                 background: #E0F2F1;
             }
@@ -332,26 +330,26 @@ This element is used to display a documentation page.
         </template>
 
         <!-- FEATURES -->
-        <template repeat="{{featureType in featureTypes}}">
-            <template if="{{data[featureType] && (featureType === 'constructs' || data[featureType].length)}}">
-                <section class="features {{featureType}}">
-                    <h2 class="title" font-type="headline">{{featureType === 'constructs' ? 'Constructor' : featureType}}</h2>
-                    <template repeat="{{feature in featureType === 'constructs' ? [data[featureType]] : data[featureType]}}">
+        <template repeat="{{feature in features}}">
+            <template if="{{data[feature] && (feature === 'constructs' || data[feature].length)}}">
+                <section class="features {{feature}}">
+                    <h2 class="title" font-type="headline">{{feature === 'constructs' ? 'Constructor' : feature}}</h2>
+                    <template repeat="{{feat in feature === 'constructs' ? [data[feature]] : data[feature]}}">
                         <div class="feature" vertical layout>
                             <div class="featurePrimary">
-                                <span class="featureName">{{featureType === 'constructs' ? 'new ' + data.name : feature.name}}</span>
-                                <template if="{{feature.type}}"><span class="featureType">{{feature.type}}</span></template>
-                                <template if="{{feature.abstract}}"><span class="featureTag" font-type="caption" self-start>abstract</span></template>
-                                <template if="{{feature.readonly}}"><span class="featureTag" font-type="caption" self-start>readonly</span></template>
-                                <template if="{{feature.static}}"><span class="featureTag" font-type="caption" self-start>static</span></template>
+                                <span class="featureName">{{feature === 'constructs' ? 'new ' + data.name : feat.name}}</span>
+                                <template if="{{feat.type}}"><span class="featureType">{{feat.type}}</span></template>
+                                <template if="{{feat.abstract}}"><span class="featureTag" font-type="caption" self-start>abstract</span></template>
+                                <template if="{{feat.readonly}}"><span class="featureTag" font-type="caption" self-start>readonly</span></template>
+                                <template if="{{feat.static}}"><span class="featureTag" font-type="caption" self-start>static</span></template>
                             </div>
                             <div class="featureSecondary">
-                                <template if="{{feature.default}}"><div class="featureDefault">Default: {{feature.default}}</div></template>
-                                <template if="{{feature.summary}}"><xp-markdown class="featureSummary" text="{{feature.summary}}"></xp-markdown></template>
-                                <template if="{{feature.params.length}}">
+                                <template if="{{feat.default}}"><div class="featureDefault">Default: {{feat.default}}</div></template>
+                                <template if="{{feat.summary}}"><xp-markdown class="featureSummary" text="{{feat.summary}}"></xp-markdown></template>
+                                <template if="{{feat.params.length}}">
                                     <div class="subtitle">Arguments</div>
                                     <ol class="list featureParams">
-                                        <template repeat="{{param in feature.params}}">
+                                        <template repeat="{{param in feat.params}}">
                                             <li class="featureParam">
                                                 <div class="paramInfo">
                                                     <span class="paramName {{param.optional ? 'optional' : ''}}">{{param.name + (param.default ? ' = ' + param.default : '')}}</span>
@@ -375,9 +373,9 @@ This element is used to display a documentation page.
                                         </template>
                                     </ol>
                                 </template>
-                                <template if="{{feature.returns}}">
+                                <template if="{{feat.returns}}">
                                     <div class="subtitle">Returns</div>
-                                    <template bind="{{feature.returns as returns}}">
+                                    <template bind="{{feat.returns as returns}}">
                                         <div class="returnsInfo">
                                             <span class="returnsType">{{returns.type}}</span>
                                         </div>
@@ -409,14 +407,14 @@ This element is used to display a documentation page.
             },
 
             /**
-             * The list of feature types.
+             * The list of features.
              *
-             * @property featureTypes
+             * @property features
              * @type Array
              * @default ["constructs", "attributes", "properties", "methods", "events"]
              * @readonly
              */
-            featureTypes: ['constructs', 'attributes', 'properties', 'methods', 'events']
+            features: ['constructs', 'attributes', 'properties', 'methods', 'events']
         });
     </script>
 
