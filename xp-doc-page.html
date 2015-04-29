@@ -102,34 +102,20 @@ This element is used to display a documentation page.
                 white-space: normal;
             }
 
-            :host [font-type="display"] {
-                font-size: 34px;
+            :host [font-type="display2"] {
+                font-size: 45px;
                 font-weight: 400;
                 letter-spacing: 0;
-                line-height: 40px;
+                line-height: 48px;
                 text-overflow: clip;
                 white-space: normal;
-            }
-
-            :host [font-type="display3"] {
-                font-size: 56px;
-                font-weight: 400;
-                letter-spacing: -0.005em;
-                line-height: 68px;
-                text-overflow: ellipsis;
-                white-space: nowrap;
             }
 
             /* GENERAL */
 
             :host section .button {
-                background: hsla(0, 0%, 100%, 1);
-                border-radius: 2px;
-                box-shadow: 0 2px 10px 0 hsla(0, 0%, 0%, 0.16), 0 2px 5px 0 hsla(0, 0%, 0%, 0.26);
-                box-sizing: border-box;
                 display: inline-block;
                 margin-right: 6px;
-                padding: 8px 12px;
             }
 
             :host section .featureName,
@@ -256,8 +242,8 @@ This element is used to display a documentation page.
 
         <!-- TOP -->
         <section class="top">
-            <h1 class="name" font-type="display3">{{data.name}}</h1>
-            <template if="{{data.version}}"><span class="version">v{{data.version}}</span></template>
+            <h1 class="name" font-type="display2">{{data.name}}</h1>
+            <template if="{{data.demo && data.demo !== href}}"><a class="button demo" font-type="button" href="{{data.demo}}">Demo</a></template>
             <h2 class="type" font-type="title">{{data.type}}</h2>
         </section>
 
@@ -266,14 +252,6 @@ This element is used to display a documentation page.
             <section class="inheritance">
                 <template if="{{data.extends}}"><h2 class="extends" font-type="title">Extends: <template if="{{data.extends.url}}"><a href="{{data.extends.url}}">{{data.extends.name}}</a></template><template if="{{!data.extends.url}}">{{data.extends.name}}</template></h2></template>
                 <template if="{{data.mixins.length}}"><h2 class="mixins" font-type="title">Mixins: <template repeat="{{mixin, i in data.mixins}}"><a href="{{mixin.url}}">{{mixin.name}}</a><template if="{{i < data.mixins.length - 1}}">, </template></template></h2></template>
-            </section>
-        </template>
-
-        <!-- LINKS -->
-        <template if="{{data.homepage || data.demo}}">
-            <section class="links">
-                <template if="{{data.homepage}}"><a class="button homepage" font-type="button" hidden?="{{data.homepage === href}}" href="{{data.homepage}}">Homepage</a></template>
-                <template if="{{data.demo}}"><a class="button demo" font-type="button" hidden?="{{data.demo === href}}" href="{{data.demo}}">Demo</a></template>
             </section>
         </template>
 
