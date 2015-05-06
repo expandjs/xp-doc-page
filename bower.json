@@ -27,7 +27,6 @@
     "expandjs": "ExpandJS/expandjs",
     "mat-paper": "ExpandJS/mat-paper",
     "xp-markdown": "ExpandJS/xp-markdown",
-    "xp-window": "ExpandJS/xp-window",
     "polymer": "Polymer/polymer#^0.5"
   }
 }

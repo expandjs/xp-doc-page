@@ -238,7 +238,7 @@ This element is used to display a documentation page.
         <!-- TOP -->
         <section class="top">
             <h1 class="name" font-type="display2">{{data.name}}</h1>
-            <a class="button demo" font-type="button" href="{{data.demo}}" on-click="{{handleClick}}">Demo</a>
+            <template if="{{data.demo}}"><a class="button demo" font-type="button" href="{{data.demo}}" on-click="{{handleClick}}">Demo</a></template>
             <h2 class="type" font-type="title">{{data.type}}</h2>
         </section>
 
