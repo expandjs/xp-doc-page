@@ -17,14 +17,12 @@ This element is used to display a documentation page.
 @dependency expandjs ExpandJS/expandjs
 @dependency mat-paper ExpandJS/mat-paper
 @dependency xp-markdown ExpandJS/xp-markdown
-@dependency xp-window ExpandJS/xp-window
 -->
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../expandjs/expandjs.html">
 <link rel="import" href="../mat-paper/mat-paper.html">
 <link rel="import" href="../xp-markdown/xp-markdown.html">
-<link rel="import" href="../xp-window/xp-window.html">
 
 <polymer-element name="xp-doc-page" constructor="XPDocPageElement" attributes="data">
 
@@ -237,21 +235,18 @@ This element is used to display a documentation page.
             }
         </style>
 
-        <!-- HIDDEN -->
-        <xp-window href="{{href}}"></xp-window>
-
         <!-- TOP -->
         <section class="top">
             <h1 class="name" font-type="display2">{{data.name}}</h1>
-            <template if="{{data.demo && data.demo !== href}}"><a class="button demo" font-type="button" href="{{data.demo}}">Demo</a></template>
+            <a class="button demo" font-type="button" href="{{data.demo}}" on-click="{{handleClick}}">Demo</a>
             <h2 class="type" font-type="title">{{data.type}}</h2>
         </section>
 
         <!-- INHERITANCE -->
         <template if="{{data.extends || data.mixins.length}}">
             <section class="inheritance">
-                <template if="{{data.extends}}"><h2 class="extends" font-type="title">Extends: <template if="{{data.extends.url}}"><a href="{{data.extends.url}}">{{data.extends.name}}</a></template><template if="{{!data.extends.url}}">{{data.extends.name}}</template></h2></template>
-                <template if="{{data.mixins.length}}"><h2 class="mixins" font-type="title">Mixins: <template repeat="{{mixin, i in data.mixins}}"><a href="{{mixin.url}}">{{mixin.name}}</a><template if="{{i < data.mixins.length - 1}}">, </template></template></h2></template>
+                <template if="{{data.extends}}"><h2 class="extends" font-type="title">Extends: <template if="{{data.extends.url}}"><a href="{{data.extends.url}}" on-click="{{handleClick}}">{{data.extends.name}}</a></template><template if="{{!data.extends.url}}">{{data.extends.name}}</template></h2></template>
+                <template if="{{data.mixins.length}}"><h2 class="mixins" font-type="title">Mixins: <template repeat="{{mixin, i in data.mixins}}"><a href="{{mixin.url}}" on-click="{{handleClick}}">{{mixin.name}}</a><template if="{{i < data.mixins.length - 1}}">, </template></template></h2></template>
             </section>
         </template>
 
@@ -372,6 +367,18 @@ This element is used to display a documentation page.
     <script>
         XPElement({
 
+            /**
+             * Fired when a doc link is clicked.
+             *
+             * @event xp-redirect
+             * @param {Element} firer
+             * @param {string} href
+             * @bubbles
+             * @cancelable
+             */
+
+            /*********************************************************************/
+
             // PUBLISH
             publish: {
 
@@ -392,7 +399,14 @@ This element is used to display a documentation page.
              * @default ["constructs", "attributes", "properties", "methods", "events"]
              * @readonly
              */
-            features: ['constructs', 'attributes', 'properties', 'methods', 'events']
+            features: ['constructs', 'attributes', 'properties', 'methods', 'events'],
+
+            /*********************************************************************/
+
+            // HANDLER
+            handleClick: function (event) {
+                if (XP.isPrevented(this.fire('xp-redirect', {firer: this, href: event.target.href}))) { event.preventDefault(); }
+            }
         });
     </script>
 
