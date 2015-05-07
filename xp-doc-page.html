@@ -368,7 +368,7 @@ This element is used to display a documentation page.
             /**
              * Fired when a doc link is clicked.
              *
-             * @event xp-redirect
+             * @event xp-doc-redirect
              * @param {Element} firer
              * @param {string} href
              * @bubbles
@@ -403,7 +403,7 @@ This element is used to display a documentation page.
 
             // HANDLER
             handleClick: function (event) {
-                if (XP.isPrevented(this.fire('xp-redirect', {firer: this, href: event.target.href}))) { event.preventDefault(); }
+                if (XP.isPrevented(this.fire('xp-doc-redirect', {firer: this, href: event.target.href}))) { event.preventDefault(); }
             }
         });
     </script>
