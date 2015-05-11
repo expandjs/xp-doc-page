@@ -1,7 +1,7 @@
 {
   "name": "xp-doc-page",
   "license": "BSD-3-Clause",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "Custom element used to create a documentation page",
   "homepage": "http://www.expandjs.com/elements/xp-doc-page",
   "authors": [
