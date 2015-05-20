@@ -1,3 +1,3 @@
 # xp-doc-page
 
-See the [`documentation page`](http://www.expandjs.com/elements/xp-doc-page) for more information.
+See the [`documentation page`](http://expandjs.com/elements/xp-doc-page) for more information.
