@@ -410,7 +410,7 @@ This element is used to display a documentation page.
 
             // HANDLER
             handleClick: function (event) {
-                if (XP.isPrevented(this.fire('xp-doc-redirect', {firer: this, href: event.target.href}))) { event.preventDefault(); }
+                if (!event.button && XP.isPrevented(this.fire('xp-doc-redirect', {firer: this, href: event.target.href}))) { event.preventDefault(); }
             }
         });
     </script>
