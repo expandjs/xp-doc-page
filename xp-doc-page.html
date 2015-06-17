@@ -1,0 +1,520 @@
+<!--
+@license
+Copyright (c) 2015 The ExpandJS authors. All rights reserved.
+This code may only be used under the BSD style license found at https://expandjs.github.io/LICENSE.txt
+The complete set of authors may be found at https://expandjs.github.io/AUTHORS.txt
+The complete set of contributors may be found at https://expandjs.github.io/CONTRIBUTORS.txt
+-->
+
+<!--
+This element is used to display a documentation page.
+
+@element xp-doc-page
+@description A custom element used to create a documentation page
+@keywords documentation, web app, html5, expandjs, web-components
+@group contents
+@homepage http://expandjs.com/elements/xp-doc-page
+
+@dependency polymer Polymer/polymer
+@dependency expandjs ExpandJS/expandjs
+@dependency iron-flex-layout PolymerElements/iron-flex-layout
+@dependency xp-markdown ExpandJS/xp-markdown
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../xp-markdown/xp-markdown.html">
+
+<dom-module id="xp-doc-page">
+
+    <style>
+        :host {
+            display: block;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            line-height: 24px;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+        }
+
+        /* RESET */
+
+        :host a {
+            text-decoration: none;
+        }
+
+        :host a[href]:hover {
+            text-decoration: underline;
+        }
+
+        :host h1, :host h2,
+        :host ol, :host ul,
+        :host /deep/ p {
+            margin: 0;
+        }
+
+        :host section ~ section {
+            margin-top: 24px;
+        }
+
+        /* FONT */
+
+        :host .font-caption {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            line-height: 14px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        :host .font-button {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            line-height: 20px;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        :host .font-title {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.005em;
+            line-height: 24px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        :host .font-headline {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 0;
+            line-height: 32px;
+            text-overflow: clip;
+            white-space: normal;
+        }
+
+        :host .font-display2 {
+            font-size: 45px;
+            font-weight: 400;
+            letter-spacing: 0;
+            line-height: 48px;
+            text-overflow: clip;
+            white-space: normal;
+        }
+
+        /* GENERAL */
+
+        :host section .button {
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        :host section .feature-name,
+        :host section .param-name {
+            font-weight: 600;
+            margin-right: 6px;
+            opacity: 0.80;
+        }
+
+        :host section .feature-type,
+        :host section .param-type,
+        :host section .returns-type {
+            margin-right: 6px;
+            opacity: 0.50;
+        }
+
+        :host section .feature-tag {
+            @apply(--layout-self-start);
+            background: hsla(0, 0%, 13%, 0.80);
+            border-radius: 2px;
+            box-sizing: border-box;
+            color: hsla(0, 0%, 100%, 1);
+            margin-right: 6px;
+            padding: 4px 8px;
+        }
+
+        :host section .feature-default,
+        :host section .param-name.optional,
+        :host section .subtitle {
+            font-style: italic;
+        }
+
+        :host section .param-name.optional:after {
+            content: ']';
+        }
+
+        :host section .param-name.optional:before {
+            content: '[';
+        }
+
+        /* TOP */
+
+        :host section.top .name {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        :host section.top .version {
+            display: inline-block;
+            opacity: 0.50;
+        }
+
+        :host section.top .type {
+            opacity: 0.30;
+            text-transform: capitalize;
+        }
+
+        /* FEATURES */
+
+        :host section.features {
+            border: 1px solid hsla(0, 0%, 0%, 0.12);
+        }
+
+        :host section.features .title {
+            padding: 24px;
+            text-transform: capitalize;
+        }
+
+        :host section.features .feature {
+            @apply(--layout-vertical);
+            padding: 16px 24px;
+        }
+
+        :host section.features .feature + .feature {
+            border-top: 1px solid hsla(0, 0%, 0%, 0.12);
+        }
+
+        :host section.features.constructs {
+            background: hsla(340, 100%, 90%, 1);
+        }
+
+        :host section.features.constructs .title {
+            background: hsla(340, 82%, 52%, 1);
+            color: hsla(0, 0%, 100%, 1);
+        }
+
+        :host section.features.attributes {
+            background: hsla(14, 100%, 87%, 1);
+        }
+
+        :host section.features.attributes .title {
+            background: hsla(14, 100%, 56%, 1);
+            color: hsla(0, 0%, 100%, 1);
+        }
+
+        :host section.features.properties {
+            background: hsla(46, 100%, 94%, 1);
+        }
+
+        :host section.features.properties .title {
+            background: hsla(44, 100%, 48%, 1);
+            color: hsla(0, 0%, 100%, 1);
+        }
+
+        :host section.features.methods {
+            background: hsla(177, 41%, 91%, 1);
+        }
+
+        :host section.features.methods .title {
+            background: hsla(172, 100%, 37%, 1);
+            color: hsla(0, 0%, 100%, 1);
+        }
+
+        :host section.features.events {
+            background: hsla(205, 87%, 94%, 1);
+        }
+
+        :host section.features.events .title {
+            background: hsla(217, 88%, 60%, 1);
+            color: hsla(0, 0%, 100%, 1);
+        }
+    </style>
+
+    <template>
+
+        <!-- TOP -->
+        <section class="top">
+            <h1 class="font-display2 name">{{data.name}}</h1>
+            <template is="dom-if" if="[[_isTruthy(data.demo)]]" restamp>
+                <a class="font-button button demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a>
+            </template>
+            <h2 class="font-title type">{{data.type}}</h2>
+        </section>
+
+        <!-- INHERITANCE -->
+        <template is="dom-if" if="[[_hasInheritance(data.extends, data.behaviors)]]" restamp>
+            <section class="inheritance">
+                <template is="dom-if" if="[[_isTruthy(data.extends)]]" restamp>
+                    <h2 class="font-title extends">
+                        <span>Extends: </span>
+                        <template is="dom-if" if="[[_isTruthy(data.extends.url)]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
+                        <template is="dom-if" if="[[_isFalsy(data.extends.url)]]" restamp><span>{{data.extends.name}}</span></template>
+                    </h2>
+                </template>
+                <template is="dom-if" if="[[_isTruthy(data.behaviors.length)]]" restamp>
+                    <h2 class="font-title behaviors">
+                        <span>Behaviors: </span>
+                        <template is="dom-repeat" items="[[data.behaviors]]" as="behavior">
+                            <a href$="[[behavior.url]]" on-click="_handleClick">{{behavior.name}}</a>
+                            <template is="dom-if" if="[[_hasMore(index, data.behaviors.length)]]" restamp><span>, </span></template>
+                        </template>
+                    </h2>
+                </template>
+            </section>
+        </template>
+
+        <!-- SUMMARY -->
+        <template is="dom-if" if="[[_isTruthy(data.summary)]]" restamp>
+            <section class="summary">
+                <h2 class="font-headline title">Summary</h2>
+                <xp-markdown class="summary" text="[[data.summary]]"></xp-markdown>
+            </section>
+        </template>
+
+        <!-- PARAMS -->
+        <template is="dom-if" if="[[_isTruthy(data.params.length)]]" restamp>
+            <section class="params">
+                <h2 class="font-headline title">Arguments</h2>
+                <ol class="list params">
+                    <template is="dom-reapeat" items="[[data.params]]" as="param">
+                        <li class="feature-param">
+                            <div class="param-info">
+                                <span class$="[[_computeParamClass(param)]]">{{_computeParamName(param)}}</span>
+                                <span class="param-type">{{param.type}}</span>
+                            </div>
+                            <div class="param-summary">{{param.summary}}</div>
+                            <template is="dom-if" if="[[_isTruthy(param.params.length)]]" restamp>
+                                <ul class="list param-params">
+                                    <template is="dom-repeat" items="[[param.params]]" as="subParam">
+                                        <div class="param-param">
+                                            <div class="param-info">
+                                                <span class$="[[_computeSubParamClass(param, subParam)]]">{{_computeSubParamName(param, subParam)}}</span>
+                                                <span class="param-type">{{subParam.type}}</span>
+                                            </div>
+                                            <div class="param-summary">{{subParam.summary}}</div>
+                                        </div>
+                                    </template>
+                                </ul>
+                            </template>
+                        </li>
+                    </template>
+                </ol>
+            </section>
+        </template>
+
+        <!-- RETURNS -->
+        <template is="dom-if" if="[[_isTruthy(data.returns)]]" restamp>
+            <section class="returns">
+                <h2 class="font-headline title">Returns</h2>
+                <div class="returns-info">
+                    <span class="returns-type">{{data.returns.type}}</span>
+                </div>
+                <div class="returns-summary">{{data.returns.summary}}</div>
+            </section>
+        </template>
+
+        <!-- FEATURES -->
+        <template is="dom-repeat" items="[[features]]" as="feature">
+            <template is="dom-if" if="[[_hasFeature(data, feature)]]" restamp>
+                <section class$="[[_computeFeatureClass(feature)]]">
+                    <h2 class="font-headline title">{{_computeFeatureTitle(feature)}}</h2>
+                    <template is="dom-repeat" items="[[_computeFeatures(data, feature)]]" as="feat">
+                        <div class="feature">
+                            <div class="feature-primary">
+                                <span class="feature-name">{{_computeFeatureName(feature, feat.name, data.name)}}</span>
+                                <template is="dom-if" if="[[_isTruthy(feat.type)]]" restamp><span class="feature-type">{{feat.type}}</span></template>
+                                <template is="dom-if" if="[[_isTruthy(feat.abstract)]]" restamp><span class="font-caption feature-tag">abstract</span></template>
+                                <template is="dom-if" if="[[_isTruthy(feat.bubbles)]]" restamp><span class="font-caption feature-tag">bubbles</span></template>
+                                <template is="dom-if" if="[[_isTruthy(feat.cancelable)]]" restamp><span class="font-caption feature-tag">cancelable</span></template>
+                                <template is="dom-if" if="[[_isTruthy(feat.notifies)]]" restamp><span class="font-caption feature-tag">notifies</span></template>
+                                <template is="dom-if" if="[[_isTruthy(feat.readonly)]]" restamp><span class="font-caption feature-tag">readonly</span></template>
+                                <template is="dom-if" if="[[_isTruthy(feat.static)]]" restamp><span class="font-caption feature-tag">static</span></template>
+                            </div>
+                            <div class="feature-secondary">
+                                <template is="dom-if" if="[[_isTruthy(feat.default)]]" restamp>
+                                    <div class="feature-default">
+                                        <span>Default: </span>
+                                        <span>{{feat.default}}</span>
+                                    </div>
+                                </template>
+                                <template is="dom-if" if="[[_isTruthy(feat.summary)]]" restamp>
+                                    <xp-markdown class="featureSummary" text="[[feat.summary]]"></xp-markdown>
+                                </template>
+                                <template is="dom-if" if="[[_isTruthy(feat.params.length)]]" restamp>
+                                    <div class="subtitle">Arguments</div>
+                                    <ol class="list feature-params">
+                                        <template is="dom-repeat" items="[[feat.params]]" as="param">
+                                            <li class="feature-param">
+                                                <div class="param-info">
+                                                    <span class$="[[_computeParamClass(param)]]">{{_computeParamName(param)}}</span>
+                                                    <span class="param-type">{{param.type}}</span>
+                                                </div>
+                                                <div class="param-summary">{{param.summary}}</div>
+                                                <template is="dom-if" if="[[_isTruthy(param.params.length)]]" restamp>
+                                                    <ul class="list param-params">
+                                                        <template is="dom-repeat" items="[[param.params]]" as="subParam">
+                                                            <li class="param-param">
+                                                                <div class="param-info">
+                                                                    <span class$="[[_computeSubParamClass(param, subParam)]]">{{_computeSubParamName(param, subParam)}}</span>
+                                                                    <span class="param-type">{{subParam.type}}</span>
+                                                                </div>
+                                                                <div class="param-summary">{{subParam.summary}}</div>
+                                                            </li>
+                                                        </template>
+                                                    </ul>
+                                                </template>
+                                            </li>
+                                        </template>
+                                    </ol>
+                                </template>
+                                <template is="dom-if" if="[[_isTruthy(feat.returns)]]" restamp>
+                                    <div class="subtitle">Returns</div>
+                                    <div class="returns-info">
+                                        <span class="returns-type">{{feat.returns.type}}</span>
+                                    </div>
+                                    <div class="returns-summary">{{feat.returns.summary}}</div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </section>
+            </template>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'xp-doc-page',
+
+            /*********************************************************************/
+
+            /**
+             * Fired when a doc link is clicked.
+             *
+             * @event xp-doc-redirect
+             * @param {Element} firer
+             * @param {string} href
+             * @bubbles
+             * @cancelable
+             */
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The element's data.
+                 *
+                 * @attribute data
+                 * @type *
+                 * @notifies
+                 */
+                data: {
+                    notify: true,
+                    value: null
+                },
+
+                /**
+                 * The list of features.
+                 *
+                 * @attribute features
+                 * @type Array
+                 * @default ["constructs", "attributes", "properties", "methods", "events"]
+                 * @notifies
+                 * @readonly
+                 */
+                features: {
+                    notify: true,
+                    readOnly: true,
+                    type: Array,
+                    value: function () { return ['constructs', 'attributes', 'properties', 'methods', 'events']; }
+                }
+            },
+
+            /*********************************************************************/
+
+            // COMPUTER
+            _computeFeatureClass: function (feature) {
+                return 'features' + (feature ? ' ' + feature : '');
+            },
+
+            // COMPUTER
+            _computeFeatureName: function (feature, featureName, entityName) {
+                return feature === 'constructs' ? 'new ' + entityName : featureName;
+            },
+
+            // COMPUTER
+            _computeFeatureTitle: function (feature) {
+                return feature === 'constructs' ? 'Constructor' : feature || '';
+            },
+
+            // COMPUTER
+            _computeFeatures: function (data, feature) {
+                return (data && (feature === 'constructs' ? [data[feature]] : data[feature])) || [];
+            },
+
+            // COMPUTER
+            _computeParamClass: function (param) {
+                return 'param-name' + (param && (param.optional || param.default) ? ' optional' : '');
+            },
+
+            // COMPUTER
+            _computeParamName: function (param) {
+                return param ? (param.name || '') + (param.default ? ' = ' + param.default : '') : '';
+            },
+
+            // COMPUTER
+            _computeSubParamClass: function (param, subParam) {
+                return 'param-name' + (subParam && (subParam.optional || subParam.default) ? ' optional' : '');
+            },
+
+            // COMPUTER
+            _computeSubParamName: function (param, subParam) {
+                return param && subParam ? (param.name ? param.name + '.' : '') + (subParam.name || '') + (subParam.default ? ' = ' + subParam.default : '') : '';
+            },
+
+            // COMPUTER
+            _hasFeature: function (data, feature) {
+                return !!data && !!data[feature] && (feature === 'constructs' || !!data[feature].length);
+            },
+
+            // COMPUTER
+            _hasInheritance: function (extend, behaviors) {
+                return !!extend || (!!behaviors && !!behaviors.length);
+            },
+
+            // COMPUTER
+            _hasMore: function (index, length) {
+                return index < length - 1;
+            },
+
+            // COMPUTER
+            _isFalsy: function (expression) {
+                return !expression;
+            },
+
+            // COMPUTER
+            _isTruthy: function (expression) {
+                return !!expression;
+            },
+
+            /*********************************************************************/
+
+            // HANDLER
+            _handleClick: function (event) {
+                if (!event.button && this.fire('xp-doc-redirect', {firer: this, href: event.target.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+            }
+        });
+    </script>
+
+</dom-module>
