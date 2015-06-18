@@ -273,7 +273,7 @@ This element is used to display a documentation page.
         <template is="dom-if" if="[[_isTruthy(data.summary)]]" restamp>
             <section class="summary">
                 <h2 class="font-headline title">Summary</h2>
-                <xp-markdown class="summary" text="[[data.summary]]"></xp-markdown>
+                <xp-markdown class="summary" code="[[data.summary]]"></xp-markdown>
             </section>
         </template>
 
@@ -344,7 +344,7 @@ This element is used to display a documentation page.
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[_isTruthy(feat.summary)]]" restamp>
-                                    <xp-markdown class="featureSummary" text="[[feat.summary]]"></xp-markdown>
+                                    <xp-markdown class="featureSummary" code="[[feat.summary]]"></xp-markdown>
                                 </template>
                                 <template is="dom-if" if="[[_isTruthy(feat.params.length)]]" restamp>
                                     <div class="subtitle">Arguments</div>
