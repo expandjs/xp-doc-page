@@ -15,10 +15,10 @@ This element is used to display a documentation page.
 @group contents
 @homepage http://expandjs.com/elements/xp-doc-page
 
-@dependency polymer Polymer/polymer
-@dependency expandjs ExpandJS/expandjs
-@dependency iron-flex-layout PolymerElements/iron-flex-layout
-@dependency xp-markdown ExpandJS/xp-markdown
+@dependency polymer Polymer/polymer#^1.0.4
+@dependency expandjs ExpandJS/expandjs#0.9.1
+@dependency iron-flex-layout PolymerElements/iron-flex-layout#^1.0.2
+@dependency xp-markdown ExpandJS/xp-markdown#0.9.1
 -->
 
 <link rel="import" href="../polymer/polymer.html">
@@ -282,7 +282,7 @@ This element is used to display a documentation page.
             <section class="params">
                 <h2 class="font-headline title">Arguments</h2>
                 <ol class="list params">
-                    <template is="dom-reapeat" items="[[data.params]]" as="param">
+                    <template is="dom-repeat" items="[[data.params]]" as="param">
                         <li class="feature-param">
                             <div class="param-info">
                                 <span class$="[[_computeParamClass(param)]]">{{_computeParamName(param)}}</span>
@@ -327,7 +327,7 @@ This element is used to display a documentation page.
                     <template is="dom-repeat" items="[[_computeFeatures(data, feature)]]" as="feat">
                         <div class="feature">
                             <div class="feature-primary">
-                                <span class="feature-name">{{_computeFeatureName(feature, feat.name, data.name)}}</span>
+                                <span class="feature-name">{{_computeFeatureName(data, feat, feature)}}</span>
                                 <template is="dom-if" if="[[_isTruthy(feat.type)]]" restamp><span class="feature-type">{{feat.type}}</span></template>
                                 <template is="dom-if" if="[[_isTruthy(feat.abstract)]]" restamp><span class="font-caption feature-tag">abstract</span></template>
                                 <template is="dom-if" if="[[_isTruthy(feat.bubbles)]]" restamp><span class="font-caption feature-tag">bubbles</span></template>
@@ -449,8 +449,8 @@ This element is used to display a documentation page.
             },
 
             // COMPUTER
-            _computeFeatureName: function (feature, featureName, entityName) {
-                return feature === 'constructs' ? 'new ' + entityName : featureName;
+            _computeFeatureName: function (data, feat, feature) {
+                return feature === 'constructs' ? 'new ' + data.name : feat.name;
             },
 
             // COMPUTER
@@ -512,7 +512,13 @@ This element is used to display a documentation page.
 
             // HANDLER
             _handleClick: function (event) {
-                if (!event.button && this.fire('xp-doc-redirect', {firer: this, href: event.target.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+
+                // Vars
+                var self = this,
+                    target = Polymer.dom(event).localTarget;
+
+                // Firing
+                if (!event.button && self.fire('xp-doc-redirect', {firer: self, href: target.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
             }
         });
     </script>
