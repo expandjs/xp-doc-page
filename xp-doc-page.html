@@ -16,9 +16,9 @@ This element is used to display a documentation page.
 @homepage http://expandjs.com/elements/xp-doc-page
 
 @dependency polymer Polymer/polymer#^1.0.0
-@dependency expandjs ExpandJS/expandjs#0.9.1
+@dependency expandjs ExpandJS/expandjs#0.9.2
 @dependency iron-flex-layout PolymerElements/iron-flex-layout#^1.0.0
-@dependency xp-markdown ExpandJS/xp-markdown#0.9.1
+@dependency xp-markdown ExpandJS/xp-markdown#0.9.2
 -->
 
 <link rel="import" href="../polymer/polymer.html">
@@ -56,8 +56,11 @@ This element is used to display a documentation page.
             margin: 0;
         }
 
-        :host section ~ section {
-            margin-top: 24px;
+        :host hr {
+            background: hsla(0, 0%, 0%, 0.12);
+            border: none;
+            height: 1px;
+            margin: 16px 0 15px 0;
         }
 
         /* FONT */
@@ -68,16 +71,6 @@ This element is used to display a documentation page.
             letter-spacing: 0.02em;
             line-height: 14px;
             text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        :host .font-button {
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            line-height: 20px;
-            text-overflow: ellipsis;
-            text-transform: uppercase;
             white-space: nowrap;
         }
 
@@ -110,9 +103,34 @@ This element is used to display a documentation page.
 
         /* GENERAL */
 
-        :host section .button {
-            display: inline-block;
-            margin-right: 6px;
+        :host section .top-container {
+            @apply(--layout-horizontal);
+            @apply(--layout-end);
+        }
+
+        :host section .name {
+            @apply(--layout-flex);
+        }
+
+        :host section .type {
+            margin-bottom: 16px;
+            opacity: 0.30;
+            text-transform: capitalize;
+        }
+
+        :host section .extends,
+        :host section .behaviors {
+            margin-top: 16px;
+        }
+
+        :host section .title {
+            margin-bottom: 16px;
+            text-transform: capitalize;
+        }
+
+        :host section .feature {
+            @apply(--layout-vertical);
+            margin-top: 16px;
         }
 
         :host section .feature-name,
@@ -152,130 +170,37 @@ This element is used to display a documentation page.
         :host section .param-name.optional:before {
             content: '[';
         }
-
-        /* TOP */
-
-        :host section.top .name {
-            display: inline-block;
-            margin-right: 8px;
-        }
-
-        :host section.top .version {
-            display: inline-block;
-            opacity: 0.50;
-        }
-
-        :host section.top .type {
-            opacity: 0.30;
-            text-transform: capitalize;
-        }
-
-        /* FEATURES */
-
-        :host section.features {
-            border: 1px solid hsla(0, 0%, 0%, 0.12);
-        }
-
-        :host section.features .title {
-            padding: 24px;
-            text-transform: capitalize;
-        }
-
-        :host section.features .feature {
-            @apply(--layout-vertical);
-            padding: 16px 24px;
-        }
-
-        :host section.features .feature + .feature {
-            border-top: 1px solid hsla(0, 0%, 0%, 0.12);
-        }
-
-        :host section.features.constructs {
-            background: hsla(340, 100%, 90%, 1);
-        }
-
-        :host section.features.constructs .title {
-            background: hsla(340, 82%, 52%, 1);
-            color: hsla(0, 0%, 100%, 1);
-        }
-
-        :host section.features.attributes {
-            background: hsla(14, 100%, 87%, 1);
-        }
-
-        :host section.features.attributes .title {
-            background: hsla(14, 100%, 56%, 1);
-            color: hsla(0, 0%, 100%, 1);
-        }
-
-        :host section.features.properties {
-            background: hsla(46, 100%, 94%, 1);
-        }
-
-        :host section.features.properties .title {
-            background: hsla(44, 100%, 48%, 1);
-            color: hsla(0, 0%, 100%, 1);
-        }
-
-        :host section.features.methods {
-            background: hsla(177, 41%, 91%, 1);
-        }
-
-        :host section.features.methods .title {
-            background: hsla(172, 100%, 37%, 1);
-            color: hsla(0, 0%, 100%, 1);
-        }
-
-        :host section.features.events {
-            background: hsla(205, 87%, 94%, 1);
-        }
-
-        :host section.features.events .title {
-            background: hsla(217, 88%, 60%, 1);
-            color: hsla(0, 0%, 100%, 1);
-        }
     </style>
 
     <template>
 
         <!-- TOP -->
         <section class="top">
-            <h1 class="font-display2 name">{{data.name}}</h1>
-            <template is="dom-if" if="[[_isTruthy(data.demo)]]" restamp>
-                <a class="font-button button demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a>
-            </template>
+            <div class="top-container">
+                <h1 class="font-display2 name">{{data.name}}</h1>
+                <template is="dom-if" if="[[_isTruthy(data.demo)]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
+            </div>
             <h2 class="font-title type">{{data.type}}</h2>
-        </section>
-
-        <!-- INHERITANCE -->
-        <template is="dom-if" if="[[_hasInheritance(data.extends, data.behaviors)]]" restamp>
-            <section class="inheritance">
-                <template is="dom-if" if="[[_isTruthy(data.extends)]]" restamp>
-                    <h2 class="font-title extends">
-                        <span>Extends: </span>
-                        <template is="dom-if" if="[[_isTruthy(data.extends.url)]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
-                        <template is="dom-if" if="[[_isFalsy(data.extends.url)]]" restamp><span>{{data.extends.name}}</span></template>
-                    </h2>
-                </template>
-                <template is="dom-if" if="[[_isTruthy(data.behaviors.length)]]" restamp>
-                    <h2 class="font-title behaviors">
-                        <span>Behaviors: </span>
-                        <template is="dom-repeat" items="[[data.behaviors]]" as="behavior">
-                            <a href$="[[behavior.url]]" on-click="_handleClick">{{behavior.name}}</a>
-                            <template is="dom-if" if="[[_hasMore(index, data.behaviors.length)]]" restamp><span>, </span></template>
-                        </template>
-                    </h2>
-                </template>
-            </section>
-        </template>
-
-        <!-- SUMMARY -->
-        <template is="dom-if" if="[[_isTruthy(data.summary)]]" restamp>
-            <section class="summary">
-                <h2 class="font-headline title">Summary</h2>
+            <template is="dom-if" if="[[_isTruthy(data.summary)]]" restamp>
                 <xp-markdown class="summary" code="[[data.summary]]"></xp-markdown>
-            </section>
-        </template>
+            </template>
+            <template is="dom-if" if="[[_isTruthy(data.extends)]]" restamp>
+                <p class="extends">
+                    <span class="feature-name">Extends:</span>
+                    <template is="dom-if" if="[[_isTruthy(data.extends.url)]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
+                    <template is="dom-if" if="[[_isFalsy(data.extends.url)]]" restamp><span>{{data.extends.name}}</span></template>
+                </p>
+            </template>
+            <template is="dom-if" if="[[_isTruthy(data.behaviors.length)]]" restamp>
+                <p class="behaviors">
+                    <span class="feature-name">Behaviors:</span>
+                    <template is="dom-repeat" items="[[data.behaviors]]" as="behavior">
+                        <a href$="[[behavior.url]]" on-click="_handleClick">{{behavior.name}}</a>
+                        <template is="dom-if" if="[[_hasMore(index, data.behaviors.length)]]" restamp><span>, </span></template>
+                    </template>
+                </p>
+            </template>
+        </section>
 
         <!-- PARAMS -->
         <template is="dom-if" if="[[_isTruthy(data.params.length)]]" restamp>
@@ -325,7 +250,7 @@ This element is used to display a documentation page.
                 <section class$="[[_computeFeatureClass(feature)]]">
                     <h2 class="font-headline title">{{_computeFeatureTitle(feature)}}</h2>
                     <template is="dom-repeat" items="[[_computeFeatures(data, feature)]]" as="feat">
-                        <div class="feature">
+                        <hr/><div class="feature">
                             <div class="feature-primary">
                                 <span class="feature-name">{{_computeFeatureName(data, feat, feature)}}</span>
                                 <template is="dom-if" if="[[_isTruthy(feat.type)]]" restamp><span class="feature-type">{{feat.type}}</span></template>
@@ -489,8 +414,8 @@ This element is used to display a documentation page.
             },
 
             // COMPUTER
-            _hasInheritance: function (extend, behaviors) {
-                return !!extend || (!!behaviors && !!behaviors.length);
+            _hasInheritance: function (data) {
+                return !!data && (!!data.extends || (!!data.behaviors && !!data.behaviors.length));
             },
 
             // COMPUTER
@@ -512,13 +437,7 @@ This element is used to display a documentation page.
 
             // HANDLER
             _handleClick: function (event) {
-
-                // Vars
-                var self = this,
-                    target = Polymer.dom(event).localTarget;
-
-                // Firing
-                if (!event.button && self.fire('xp-doc-redirect', {firer: self, href: target.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+                if (!event.button && this.fire('xp-doc-redirect', {firer: this, href: event.target.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
             }
         });
     </script>
