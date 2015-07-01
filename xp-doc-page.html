@@ -119,8 +119,15 @@ This element is used to display a documentation page.
         }
 
         :host section .extends,
+        :host section .wraps,
         :host section .behaviors {
             margin-top: 16px;
+        }
+
+        :host section .extends ~ .wraps,
+        :host section .extends ~ .behaviors,
+        :host section .wraps ~ .behaviors {
+            margin-top: 0;
         }
 
         :host section .title {
@@ -189,6 +196,13 @@ This element is used to display a documentation page.
                     <span class="feature-name">Extends:</span>
                     <template is="dom-if" if="[[_isTruthy(data.extends.url)]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
                     <template is="dom-if" if="[[_isFalsy(data.extends.url)]]" restamp><span>{{data.extends.name}}</span></template>
+                </p>
+            </template>
+            <template is="dom-if" if="[[_isTruthy(data.wraps)]]" restamp>
+                <p class="wraps">
+                    <span class="feature-name">Wraps:</span>
+                    <template is="dom-if" if="[[_isTruthy(data.wraps.url)]]" restamp><a href$="[[data.wraps.url]]" on-click="_handleClick">{{data.wraps.name}}</a></template>
+                    <template is="dom-if" if="[[_isFalsy(data.wraps.url)]]" restamp><span>{{data.wraps.name}}</span></template>
                 </p>
             </template>
             <template is="dom-if" if="[[_isTruthy(data.behaviors.length)]]" restamp>
