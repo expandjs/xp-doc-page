@@ -115,6 +115,7 @@ This element is used to display a documentation page.
         }
 
         :host header .type {
+            float: left;
             opacity: 0.30;
             text-transform: capitalize;
         }
@@ -191,8 +192,8 @@ This element is used to display a documentation page.
         <!-- HEADER -->
         <header class="header">
             <h1 class="font-display2 name">{{data.name}}</h1>
-            <template is="dom-if" if="[[data.demo]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
             <h2 class="font-title type">{{data.type}}</h2>
+            <template is="dom-if" if="[[data.demo]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
         </header>
 
         <!-- DESCRIPTION -->
