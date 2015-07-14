@@ -37,6 +37,7 @@ This element is used to display a documentation page.
             line-height: 24px;
             overflow: visible;
             text-overflow: clip;
+            text-rendering: optimizeLegibility;
             white-space: normal;
         }
 
@@ -71,7 +72,18 @@ This element is used to display a documentation page.
             letter-spacing: 0.02em;
             line-height: 14px;
             text-overflow: ellipsis;
+            text-rendering: optimizeLegibility;
             white-space: nowrap;
+        }
+
+        :host .font-subhead {
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            line-height: 24px;
+            text-overflow: clip;
+            text-rendering: optimizeLegibility;
+            white-space: normal;
         }
 
         :host .font-title {
@@ -79,43 +91,38 @@ This element is used to display a documentation page.
             font-weight: 500;
             letter-spacing: 0.005em;
             line-height: 24px;
+            overflow: hidden;
             text-overflow: ellipsis;
+            text-rendering: optimizeLegibility;
             white-space: nowrap;
         }
 
-        :host .font-headline {
-            font-size: 24px;
-            font-weight: 400;
-            letter-spacing: 0;
-            line-height: 32px;
-            text-overflow: clip;
-            white-space: normal;
-        }
-
         :host .font-display2 {
-            font-size: 45px;
+            font-size: 44px;
             font-weight: 400;
             letter-spacing: 0;
             line-height: 48px;
-            text-overflow: clip;
-            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-rendering: optimizeLegibility;
+            white-space: nowrap;
         }
 
-        /* GENERAL */
+        /* HEADER */
 
-        :host section .top-container {
-            @apply(--layout-horizontal);
-            @apply(--layout-end);
+        :host header .demo {
+            float: right;
         }
 
-        :host section .name {
-            @apply(--layout-flex);
-        }
-
-        :host section .type {
-            margin-bottom: 16px;
+        :host header .type {
             opacity: 0.30;
             text-transform: capitalize;
+        }
+
+        /* SECTION */
+
+        :host section {
+            margin-top: 16px;
         }
 
         :host section .extends,
@@ -181,31 +188,34 @@ This element is used to display a documentation page.
 
     <template>
 
-        <!-- TOP -->
-        <section class="top">
-            <div class="top-container">
-                <h1 class="font-display2 name">{{data.name}}</h1>
-                <template is="dom-if" if="[[_isTruthy(data.demo)]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
-            </div>
+        <!-- HEADER -->
+        <header class="header">
+            <h1 class="font-display2 name">{{data.name}}</h1>
+            <template is="dom-if" if="[[data.demo]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
             <h2 class="font-title type">{{data.type}}</h2>
-            <template is="dom-if" if="[[_isTruthy(data.summary)]]" restamp>
+        </header>
+
+        <!-- DESCRIPTION -->
+        <section class="description">
+            <h3 class="font-subhead title">Description</h3><hr/>
+            <template is="dom-if" if="[[data.summary]]" restamp>
                 <xp-markdown class="summary" code="[[data.summary]]"></xp-markdown>
             </template>
-            <template is="dom-if" if="[[_isTruthy(data.extends)]]" restamp>
+            <template is="dom-if" if="[[data.extends]]" restamp>
                 <p class="extends">
                     <span class="feature-name">Extends:</span>
-                    <template is="dom-if" if="[[_isTruthy(data.extends.url)]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
-                    <template is="dom-if" if="[[_isFalsy(data.extends.url)]]" restamp><span>{{data.extends.name}}</span></template>
+                    <template is="dom-if" if="[[data.extends.url]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
+                    <template is="dom-if" if="[[!data.extends.url]]" restamp><span>{{data.extends.name}}</span></template>
                 </p>
             </template>
-            <template is="dom-if" if="[[_isTruthy(data.wraps)]]" restamp>
+            <template is="dom-if" if="[[data.wraps]]" restamp>
                 <p class="wraps">
                     <span class="feature-name">Wraps:</span>
-                    <template is="dom-if" if="[[_isTruthy(data.wraps.url)]]" restamp><a href$="[[data.wraps.url]]" on-click="_handleClick">{{data.wraps.name}}</a></template>
-                    <template is="dom-if" if="[[_isFalsy(data.wraps.url)]]" restamp><span>{{data.wraps.name}}</span></template>
+                    <template is="dom-if" if="[[data.wraps.url]]" restamp><a href$="[[data.wraps.url]]" on-click="_handleClick">{{data.wraps.name}}</a></template>
+                    <template is="dom-if" if="[[!data.wraps.url]]" restamp><span>{{data.wraps.name}}</span></template>
                 </p>
             </template>
-            <template is="dom-if" if="[[_isTruthy(data.behaviors.length)]]" restamp>
+            <template is="dom-if" if="[[data.behaviors.length]]" restamp>
                 <p class="behaviors">
                     <span class="feature-name">Behaviors:</span>
                     <template is="dom-repeat" items="[[data.behaviors]]" as="behavior">
@@ -217,9 +227,9 @@ This element is used to display a documentation page.
         </section>
 
         <!-- PARAMS -->
-        <template is="dom-if" if="[[_isTruthy(data.params.length)]]" restamp>
+        <template is="dom-if" if="[[data.params.length]]" restamp>
             <section class="params">
-                <h2 class="font-headline title">Arguments</h2>
+                <h3 class="font-subhead title">Arguments</h3><hr/>
                 <ol class="list params">
                     <template is="dom-repeat" items="[[data.params]]" as="param">
                         <li class="feature-param">
@@ -228,7 +238,7 @@ This element is used to display a documentation page.
                                 <span class="param-type">{{param.type}}</span>
                             </div>
                             <div class="param-summary">{{param.summary}}</div>
-                            <template is="dom-if" if="[[_isTruthy(param.params.length)]]" restamp>
+                            <template is="dom-if" if="[[param.params.length]]" restamp>
                                 <ul class="list param-params">
                                     <template is="dom-repeat" items="[[param.params]]" as="subParam">
                                         <div class="param-param">
@@ -248,9 +258,9 @@ This element is used to display a documentation page.
         </template>
 
         <!-- RETURNS -->
-        <template is="dom-if" if="[[_isTruthy(data.returns)]]" restamp>
+        <template is="dom-if" if="[[data.returns]]" restamp>
             <section class="returns">
-                <h2 class="font-headline title">Returns</h2>
+                <h3 class="font-subhead title">Returns</h3><hr/>
                 <div class="returns-info">
                     <span class="returns-type">{{data.returns.type}}</span>
                 </div>
@@ -262,30 +272,30 @@ This element is used to display a documentation page.
         <template is="dom-repeat" items="[[features]]" as="feature">
             <template is="dom-if" if="[[_hasFeature(data, feature)]]" restamp>
                 <section class$="[[_computeFeatureClass(feature)]]">
-                    <h2 class="font-headline title">{{_computeFeatureTitle(feature)}}</h2>
+                    <h3 class="font-subhead title">{{_computeFeatureTitle(feature)}}</h3>
                     <template is="dom-repeat" items="[[_computeFeatures(data, feature)]]" as="feat">
                         <hr/><div class="feature">
                             <div class="feature-primary">
                                 <span class="feature-name">{{_computeFeatureName(data, feat, feature)}}</span>
-                                <template is="dom-if" if="[[_isTruthy(feat.type)]]" restamp><span class="feature-type">{{feat.type}}</span></template>
-                                <template is="dom-if" if="[[_isTruthy(feat.abstract)]]" restamp><span class="font-caption feature-tag">abstract</span></template>
-                                <template is="dom-if" if="[[_isTruthy(feat.bubbles)]]" restamp><span class="font-caption feature-tag">bubbles</span></template>
-                                <template is="dom-if" if="[[_isTruthy(feat.cancelable)]]" restamp><span class="font-caption feature-tag">cancelable</span></template>
-                                <template is="dom-if" if="[[_isTruthy(feat.notifies)]]" restamp><span class="font-caption feature-tag">notifies</span></template>
-                                <template is="dom-if" if="[[_isTruthy(feat.readonly)]]" restamp><span class="font-caption feature-tag">readonly</span></template>
-                                <template is="dom-if" if="[[_isTruthy(feat.static)]]" restamp><span class="font-caption feature-tag">static</span></template>
+                                <template is="dom-if" if="[[feat.type]]" restamp><span class="feature-type">{{feat.type}}</span></template>
+                                <template is="dom-if" if="[[feat.abstract]]" restamp><span class="font-caption feature-tag">abstract</span></template>
+                                <template is="dom-if" if="[[feat.bubbles]]" restamp><span class="font-caption feature-tag">bubbles</span></template>
+                                <template is="dom-if" if="[[feat.cancelable]]" restamp><span class="font-caption feature-tag">cancelable</span></template>
+                                <template is="dom-if" if="[[feat.notifies]]" restamp><span class="font-caption feature-tag">notifies</span></template>
+                                <template is="dom-if" if="[[feat.readonly]]" restamp><span class="font-caption feature-tag">readonly</span></template>
+                                <template is="dom-if" if="[[feat.static]]" restamp><span class="font-caption feature-tag">static</span></template>
                             </div>
                             <div class="feature-secondary">
-                                <template is="dom-if" if="[[_isTruthy(feat.default)]]" restamp>
+                                <template is="dom-if" if="[[feat.default]]" restamp>
                                     <div class="feature-default">
                                         <span>Default: </span>
                                         <span>{{feat.default}}</span>
                                     </div>
                                 </template>
-                                <template is="dom-if" if="[[_isTruthy(feat.summary)]]" restamp>
+                                <template is="dom-if" if="[[feat.summary]]" restamp>
                                     <xp-markdown class="featureSummary" code="[[feat.summary]]"></xp-markdown>
                                 </template>
-                                <template is="dom-if" if="[[_isTruthy(feat.params.length)]]" restamp>
+                                <template is="dom-if" if="[[feat.params.length]]" restamp>
                                     <div class="subtitle">Arguments</div>
                                     <ol class="list feature-params">
                                         <template is="dom-repeat" items="[[feat.params]]" as="param">
@@ -295,7 +305,7 @@ This element is used to display a documentation page.
                                                     <span class="param-type">{{param.type}}</span>
                                                 </div>
                                                 <div class="param-summary">{{param.summary}}</div>
-                                                <template is="dom-if" if="[[_isTruthy(param.params.length)]]" restamp>
+                                                <template is="dom-if" if="[[param.params.length]]" restamp>
                                                     <ul class="list param-params">
                                                         <template is="dom-repeat" items="[[param.params]]" as="subParam">
                                                             <li class="param-param">
@@ -312,7 +322,7 @@ This element is used to display a documentation page.
                                         </template>
                                     </ol>
                                 </template>
-                                <template is="dom-if" if="[[_isTruthy(feat.returns)]]" restamp>
+                                <template is="dom-if" if="[[feat.returns]]" restamp>
                                     <div class="subtitle">Returns</div>
                                     <div class="returns-info">
                                         <span class="returns-type">{{feat.returns.type}}</span>
@@ -355,11 +365,12 @@ This element is used to display a documentation page.
                  * The element's data.
                  *
                  * @attribute data
-                 * @type *
+                 * @type Object
                  * @notifies
                  */
                 data: {
                     notify: true,
+                    type: Object,
                     value: null
                 },
 
@@ -435,16 +446,6 @@ This element is used to display a documentation page.
             // COMPUTER
             _hasMore: function (index, length) {
                 return index < length - 1;
-            },
-
-            // COMPUTER
-            _isFalsy: function (expression) {
-                return !expression;
-            },
-
-            // COMPUTER
-            _isTruthy: function (expression) {
-                return !!expression;
             },
 
             /*********************************************************************/
