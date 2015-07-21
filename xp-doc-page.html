@@ -110,10 +110,6 @@ This element is used to display a documentation page.
 
         /* HEADER */
 
-        :host header {
-            overflow: hidden;
-        }
-
         :host header .demo {
             float: right;
         }
@@ -198,6 +194,7 @@ This element is used to display a documentation page.
             <h1 class="font-display2 name">{{data.name}}</h1>
             <h2 class="font-title type">{{data.type}}</h2>
             <template is="dom-if" if="[[data.demo]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
+            <div style="clear:both"></div>
         </header>
 
         <!-- DESCRIPTION -->
