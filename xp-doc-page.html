@@ -14,11 +14,12 @@ This element is used to display a documentation page.
 @keywords documentation, web app, html5, expandjs, web-components
 @group contents
 @homepage http://expandjs.com/elements/xp-doc-page
+@repository
 
 @dependency polymer Polymer/polymer#^1.0.0
-@dependency expandjs ExpandJS/expandjs#0.9.4
+@dependency expandjs ExpandJS/expandjs#0.9.5
 @dependency iron-flex-layout PolymerElements/iron-flex-layout#^1.0.0
-@dependency xp-markdown ExpandJS/xp-markdown#0.9.4
+@dependency xp-markdown ExpandJS/xp-markdown#0.9.5
 -->
 
 <link rel="import" href="../polymer/polymer.html">
@@ -47,13 +48,22 @@ This element is used to display a documentation page.
             text-decoration: none;
         }
 
-        :host a[href]:hover {
+        :host button {
+            background: transparent;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+            outline: 0;
+        }
+
+        :host a[href]:hover,
+        :host button:hover {
             text-decoration: underline;
         }
 
         :host h1, :host h2,
-        :host ol, :host ul,
-        :host /deep/ p {
+        :host ol, :host ul {
             margin: 0;
         }
 
@@ -73,6 +83,17 @@ This element is used to display a documentation page.
             line-height: 14px;
             text-overflow: ellipsis;
             text-rendering: optimizeLegibility;
+            white-space: nowrap;
+        }
+
+        :host .font-button {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            line-height: 20px;
+            text-overflow: ellipsis;
+            text-rendering: optimizeLegibility;
+            text-transform: uppercase;
             white-space: nowrap;
         }
 
@@ -110,8 +131,14 @@ This element is used to display a documentation page.
 
         /* HEADER */
 
-        :host header .demo {
+        :host header .demo,
+        :host header .repository {
             float: right;
+        }
+
+        :host header .demo > *,
+        :host header .repository > * {
+            display: block;
         }
 
         :host header .type {
@@ -127,25 +154,38 @@ This element is used to display a documentation page.
         }
 
         :host section .extends,
-        :host section .wraps,
+        :host section .adapts,
         :host section .behaviors {
-            margin-top: 16px;
-        }
-
-        :host section .extends ~ .wraps,
-        :host section .extends ~ .behaviors,
-        :host section .wraps ~ .behaviors {
-            margin-top: 0;
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
         }
 
         :host section .title {
+            @apply(--layout-horizontal);
+            @apply(--layout-center);
+            @apply(--layout-justified);
             margin-bottom: 16px;
             text-transform: capitalize;
         }
 
+        :host section .summary::shadow #xpMarkdownWrapper > *:last-child {
+            margin-bottom: 0;
+        }
+
+        :host section[data-private] .features-private::after {
+            content: "Hide private";
+        }
+
+        :host section:not([data-private]) .features-private::after {
+            content: "Show private";
+        }
+
         :host section .feature {
             @apply(--layout-vertical);
-            margin-top: 16px;
+        }
+
+        :host section:not([data-private]) .feature[data-private] {
+            display: none !important;
         }
 
         :host section .feature-name,
@@ -160,6 +200,11 @@ This element is used to display a documentation page.
         :host section .returns-type {
             margin-right: 6px;
             opacity: 0.50;
+        }
+
+        :host section .feature-type + .feature-type::before {
+            content: ",";
+            margin: 0 6px 0 -6px;
         }
 
         :host section .feature-tag {
@@ -178,6 +223,12 @@ This element is used to display a documentation page.
             font-style: italic;
         }
 
+        :host section .feature-summary::shadow ol,
+        :host section .feature-summary::shadow p,
+        :host section .feature-summary::shadow ul {
+            margin: 0;
+        }
+
         :host section .param-name.optional:after {
             content: ']';
         }
@@ -190,43 +241,27 @@ This element is used to display a documentation page.
     <template>
 
         <!-- HEADER -->
-        <header class="header">
-            <h1 class="font-display2 name">{{data.name}}</h1>
-            <h2 class="font-title type">{{data.type}}</h2>
-            <template is="dom-if" if="[[data.demo]]" restamp><a class="font-title demo" href$="[[data.demo]]" on-click="_handleClick">Demo</a></template>
-            <div style="clear:both"></div>
-        </header>
+        <template is="dom-if" if="[[data]]" restamp>
+            <header class="header">
+                <h1 class="font-display2 name">{{data.name}}</h1>
+                <h2 class="font-title type">{{data.type}}</h2>
+                <template is="dom-if" if="[[data.repository]]" restamp><a class="font-title repository" href$="[[data.repository]]" title="GitHub" on-click="_handleClick"><xp-icon src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI5OTkiIHZpZXdCb3g9IjAgMCAxMDI0IDk5OSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPGRlZnM+PC9kZWZzPiAgICA8ZyBpZD0iaWNvbi1naXRodWIiIGZpbGw9IiMwMDAwMDAiIG9wYWNpdHk9IjAuNjIiPiAgICAgICAgPHBhdGggZD0iTTUxMiwwIEMyMjkuMjUsMCAwLDIyOS4yNSAwLDUxMiBDMCw3MzguMjUgMTQ2LjY4OCw5MzAuMTI1IDM1MC4xNTYsOTk3LjgxMiBDMzc1Ljc1LDEwMDIuNSAzODUuMDk0LDk4Ni42ODcgMzg1LjA5NCw5NzMuMTg3IEMzODUuMDk0LDk2MC45OTkgMzg0LjYyNSw5MjAuNjI1IDM4NC4zNzUsODc3Ljg3NSBDMjQyLDkwOC44MTIgMjExLjkwNiw4MTcuNSAyMTEuOTA2LDgxNy41IEMxODguNTk0LDc1OC4zNzUgMTU1LjA2Miw3NDIuNjI1IDE1NS4wNjIsNzQyLjYyNSBDMTA4LjUzMSw3MTAuODc1IDE1OC41OTIsNzExLjUgMTU4LjU5Miw3MTEuNSBDMjA5Ljk5OCw3MTUuMDYyIDIzNy4wNjIsNzY0LjI1IDIzNy4wNjIsNzY0LjI1IEMyODIuNzUsODQyLjUgMzU2LjkzNyw4MTkuODc1IDM4Ni4wNjIsODA2Ljc1IEMzOTAuNzE2LDc3My43NSA0MDMuOTY2LDc1MS4xMjUgNDE4LjU2Miw3MzguMzc1IEMzMDQuOTA2LDcyNS40MzggMTg1LjM0NCw2ODEuNSAxODUuMzQ0LDQ4NS4zMTIgQzE4NS4zNDQsNDI5LjM3NCAyMDUuMzEzLDM4My43NSAyMzgsMzQ3LjkwNiBDMjMyLjc4MSwzMzQuOTA2IDIxNS4xNTYsMjgyLjgxMiAyNDMuMDYyLDIxMi4zNDQgQzI0My4wNjIsMjEyLjM0NCAyODYsMTk4LjU5NCAzODMuODc0LDI2NC44NDQgQzQyNC42ODYsMjUzLjQzOCA0NjguNDY4LDI0Ny44MTMgNTExLjk5OSwyNDcuNjI1IEM1NTUuNDk5LDI0Ny44MTMgNTk5LjMxMSwyNTMuNSA2NDAuMTg3LDI2NC45MDYgQzczNy44NzUsMTk4LjU5NCA3ODAuODc1LDIxMi40MDYgNzgwLjg3NSwyMTIuNDA2IEM4MDguODc1LDI4Mi45MzcgNzkxLjI1LDMzNC45NjggNzg2LDM0Ny45MDYgQzgxOC44MTIsMzgzLjc1IDgzOC42MjUsNDI5LjM3NSA4MzguNjI1LDQ4NS4zMTIgQzgzOC42MjUsNjgyIDcxOC44NzUsNzI1LjMxMiA2MDQuODEzLDczOCBDNjIzLjI1MSw3NTMuODc1IDYzOS41NjMsNzg1IDYzOS41NjMsODMyLjc1IEM2MzkuNTYzLDkwMS4xODggNjM4Ljg3NSw5NTYuMzc1IDYzOC44NzUsOTczLjI1IEM2MzguODc1LDk4Ni44NzUgNjQ4LjE4NywxMDAyLjgxMiA2NzQuMTI1LDk5Ny44MTIgQzg3Ny40MzgsOTMwIDEwMjQsNzM4LjEyNSAxMDI0LDUxMiBDMTAyNCwyMjkuMjUgNzk0Ljc1LDAgNTEyLDAgTDUxMiwwIFoiPjwvcGF0aD4gICAgPC9nPjwvc3ZnPg=="></xp-icon></a></template>
+                <template is="dom-if" if="[[data.demo]]" restamp><a class="font-title demo" href$="[[data.demo]]" title="Demo" on-click="_handleClick"><xp-icon src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgNC41QzcgNC41IDIuNzMgNy42MSAxIDEyYzEuNzMgNC4zOSA2IDcuNSAxMSA3LjVzOS4yNy0zLjExIDExLTcuNWMtMS43My00LjM5LTYtNy41LTExLTcuNXpNMTIgMTdjLTIuNzYgMC01LTIuMjQtNS01czIuMjQtNSA1LTUgNSAyLjI0IDUgNS0yLjI0IDUtNSA1em0wLThjLTEuNjYgMC0zIDEuMzQtMyAzczEuMzQgMyAzIDMgMy0xLjM0IDMtMy0xLjM0LTMtMy0zeiIvPjwvc3ZnPg=="></xp-icon></a></template>
+                <div style="clear:both"></div>
+            </header>
+        </template>
 
         <!-- DESCRIPTION -->
-        <section class="description">
-            <h3 class="font-subhead title">Description</h3><hr/>
-            <template is="dom-if" if="[[data.summary]]" restamp>
-                <xp-markdown class="summary" code="[[data.summary]]"></xp-markdown>
-            </template>
-            <template is="dom-if" if="[[data.extends]]" restamp>
-                <p class="extends">
-                    <span class="feature-name">Extends:</span>
-                    <template is="dom-if" if="[[data.extends.url]]" restamp><a href$="[[data.extends.url]]" on-click="_handleClick">{{data.extends.name}}</a></template>
-                    <template is="dom-if" if="[[!data.extends.url]]" restamp><span>{{data.extends.name}}</span></template>
-                </p>
-            </template>
-            <template is="dom-if" if="[[data.wraps]]" restamp>
-                <p class="wraps">
-                    <span class="feature-name">Wraps:</span>
-                    <template is="dom-if" if="[[data.wraps.url]]" restamp><a href$="[[data.wraps.url]]" on-click="_handleClick">{{data.wraps.name}}</a></template>
-                    <template is="dom-if" if="[[!data.wraps.url]]" restamp><span>{{data.wraps.name}}</span></template>
-                </p>
-            </template>
-            <template is="dom-if" if="[[data.behaviors.length]]" restamp>
-                <p class="behaviors">
-                    <span class="feature-name">Behaviors:</span>
-                    <template is="dom-repeat" items="[[data.behaviors]]" as="behavior">
-                        <a href$="[[behavior.url]]" on-click="_handleClick">{{behavior.name}}</a>
-                        <template is="dom-if" if="[[_hasMore(index, data.behaviors.length)]]" restamp><span>, </span></template>
-                    </template>
-                </p>
-            </template>
-        </section>
+        <template is="dom-if" if="[[data]]" restamp>
+            <section class="description">
+                <h3 class="font-subhead title">Description</h3><hr/>
+                <template is="dom-if" if="[[data.extends]]" restamp><div class="extends"><span class="feature-name">Extends:</span><span class="feature-type">{{data.extends.name}}</span></div></template>
+                <template is="dom-if" if="[[data.adapts]]" restamp><div class="adapts"><span class="feature-name">Adapts:</span><span class="feature-type">{{data.adapts.name}}</span></div></template>
+                <template is="dom-if" if="[[data.behaviors.length]]" restamp><div class="behaviors"><span class="feature-name">Behaviors:</span><template is="dom-repeat" items="[[data.behaviors]]" as="behavior"><span class="feature-type">{{behavior.name}}</span></template></div></template>
+                <template is="dom-if" if="[[_hasInheritance(data)]]" restamp><hr/></template>
+                <template is="dom-if" if="[[data.summary]]" restamp><xp-markdown class="summary" code="[[data.summary]]"></xp-markdown></template>
+            </section>
+        </template>
 
         <!-- PARAMS -->
         <template is="dom-if" if="[[data.params.length]]" restamp>
@@ -273,13 +308,17 @@ This element is used to display a documentation page.
         <!-- FEATURES -->
         <template is="dom-repeat" items="[[features]]" as="feature">
             <template is="dom-if" if="[[_hasFeature(data, feature)]]" restamp>
-                <section class$="[[_computeFeatureClass(feature)]]">
-                    <h3 class="font-subhead title">{{_computeFeatureTitle(feature)}}</h3>
+                <section class="features" data-type$="[[feature]]">
+                    <h3 class="font-subhead title">
+                        <span class="features-title">{{_computeFeatureTitle(feature)}}</span>
+                        <template is="dom-if" if="[[_hasPrivate(data, feature)]]" restamp><button class="font-button features-private" on-click="_handlePrivate"></button></template>
+                    </h3>
                     <template is="dom-repeat" items="[[_computeFeatures(data, feature)]]" as="feat">
-                        <hr/><div class="feature">
+                        <div class="feature" data-private$="[[feat.private]]"><hr/>
                             <div class="feature-primary">
                                 <span class="feature-name">{{_computeFeatureName(data, feat, feature)}}</span>
                                 <template is="dom-if" if="[[feat.type]]" restamp><span class="feature-type">{{feat.type}}</span></template>
+                                <template is="dom-if" if="[[feat.private]]" restamp><span class="font-caption feature-tag">private</span></template>
                                 <template is="dom-if" if="[[feat.abstract]]" restamp><span class="font-caption feature-tag">abstract</span></template>
                                 <template is="dom-if" if="[[feat.bubbles]]" restamp><span class="font-caption feature-tag">bubbles</span></template>
                                 <template is="dom-if" if="[[feat.cancelable]]" restamp><span class="font-caption feature-tag">cancelable</span></template>
@@ -295,7 +334,7 @@ This element is used to display a documentation page.
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[feat.summary]]" restamp>
-                                    <xp-markdown class="featureSummary" code="[[feat.summary]]"></xp-markdown>
+                                    <xp-markdown class="feature-summary" code="[[feat.summary]]"></xp-markdown>
                                 </template>
                                 <template is="dom-if" if="[[feat.params.length]]" restamp>
                                     <div class="subtitle">Arguments</div>
@@ -377,6 +416,21 @@ This element is used to display a documentation page.
                 },
 
                 /**
+                 * If set to true, the data are not ready yet.
+                 *
+                 * @attribute empty-data
+                 * @type boolean
+                 * @notifies
+                 * @readonly
+                 */
+                emptyData: {
+                    computed: '_computeEmptyData(data)',
+                    notify: true,
+                    reflectToAttribute: true,
+                    type: Boolean
+                },
+
+                /**
                  * The list of features.
                  *
                  * @attribute features
@@ -396,23 +450,18 @@ This element is used to display a documentation page.
             /*********************************************************************/
 
             // COMPUTER
-            _computeFeatureClass: function (feature) {
-                return 'features' + (feature ? ' ' + feature : '');
+            _computeEmptyData: function (data) {
+                return !data;
             },
 
             // COMPUTER
             _computeFeatureName: function (data, feat, feature) {
-                return feature === 'constructs' ? 'new ' + data.name : feat.name;
+                return feature === 'constructs' ? (data && 'new ' + data.name) || '' : (feat && feat.name) || '';
             },
 
             // COMPUTER
             _computeFeatureTitle: function (feature) {
                 return feature === 'constructs' ? 'Constructor' : feature || '';
-            },
-
-            // COMPUTER
-            _computeFeatures: function (data, feature) {
-                return (data && (feature === 'constructs' ? [data[feature]] : data[feature])) || [];
             },
 
             // COMPUTER
@@ -423,6 +472,11 @@ This element is used to display a documentation page.
             // COMPUTER
             _computeParamName: function (param) {
                 return param ? (param.name || '') + (param.default ? ' = ' + param.default : '') : '';
+            },
+
+            // COMPUTER
+            _computeFeatures: function (data, feature) {
+                return (data && (feature === 'constructs' ? [data[feature]] : data[feature])) || [];
             },
 
             // COMPUTER
@@ -450,11 +504,21 @@ This element is used to display a documentation page.
                 return index < length - 1;
             },
 
+            // COMPUTER
+            _hasPrivate: function (data, feature) {
+                return !!data && !!data[feature] && !!XP.find(data[feature], function (feat) { return feat.private; });
+            },
+
             /*********************************************************************/
 
             // HANDLER
             _handleClick: function (event) {
                 if (!event.button && this.fire('xp-doc-redirect', {firer: this, href: event.target.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+            },
+
+            // HANDLER
+            _handlePrivate: function (event) {
+                XP.toggleAttribute(XP.findParentElement(event.target, 'section'), 'data-private');
             }
         });
     </script>
