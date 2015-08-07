@@ -18,9 +18,9 @@ This element is used to display a documentation page.
 @repository
 
 @dependency polymer Polymer/polymer#^1.0.0
-@dependency expandjs ExpandJS/expandjs#0.9.5
+@dependency expandjs ExpandJS/expandjs#0.9.6
 @dependency iron-flex-layout PolymerElements/iron-flex-layout#^1.0.0
-@dependency xp-markdown ExpandJS/xp-markdown#0.9.5
+@dependency xp-markdown ExpandJS/xp-markdown#0.9.6
 -->
 
 <link rel="import" href="../polymer/polymer.html">
@@ -204,9 +204,9 @@ This element is used to display a documentation page.
             opacity: 0.50;
         }
 
-        :host section .feature-type + .feature-type::before {
+        :host section .feature-type:not(:last-of-type)::after {
             content: ",";
-            margin: 0 6px 0 -6px;
+            margin: 0;
         }
 
         :host section .feature-tag {
@@ -392,7 +392,7 @@ This element is used to display a documentation page.
             /**
              * Fired when a doc link is clicked.
              *
-             * @event xp-doc-redirect
+             * @event xp-redirect
              * @param {Element} firer
              * @param {string} href
              * @bubbles
@@ -515,7 +515,7 @@ This element is used to display a documentation page.
 
             // HANDLER
             _handleClick: function (event) {
-                if (!event.button && this.fire('xp-doc-redirect', {firer: this, href: event.currentTarget.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+                if (!event.button && this.fire('xp-redirect', {firer: this, href: event.currentTarget.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
             },
 
             // HANDLER
